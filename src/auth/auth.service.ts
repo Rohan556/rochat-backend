@@ -7,7 +7,7 @@ import { LoginInput, signupInput } from './inputs/auth.input';
 import * as bcrypt from 'bcrypt';
 import { AuthModel } from './auth.model';
 import * as jwt from 'jsonwebtoken';
-import { JWTToken } from './dto/token.output';
+import { JWTToken } from './dto/token.dto';
 
 @Injectable()
 export class AuthService {

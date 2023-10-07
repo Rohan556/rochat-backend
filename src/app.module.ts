@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import config from './configs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ApolloDriver } from '@nestjs/apollo';
       autoSchemaFile: 'src/schema.gql',
     }),
     AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

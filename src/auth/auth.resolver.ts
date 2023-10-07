@@ -2,7 +2,7 @@ import { Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { LoginInput, signupInput } from './inputs/auth.input';
 import { Args } from '@nestjs/graphql';
-import { JWTToken } from './dto/token.output';
+import { JWTToken } from './dto/token.dto';
 
 @Resolver()
 export class AuthResolver {

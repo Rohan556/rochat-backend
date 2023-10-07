@@ -7,13 +7,25 @@ type JWTToken {
   accessToken: String!
 }
 
+type Users {
+  id: Int!
+  username: String!
+  name: String!
+  status: String!
+}
+
 type Query {
   login(data: LoginInput!): JWTToken!
+  getSearchedUsers(data: SearchUserInput!): [Users!]!
 }
 
 input LoginInput {
   username: String!
   password: String!
+}
+
+input SearchUserInput {
+  searchString: String!
 }
 
 type Mutation {
