@@ -14,6 +14,10 @@ type Users {
   status: String!
 }
 
+type CreateConnectionOutput {
+  status: Boolean!
+}
+
 type Query {
   login(data: LoginInput!): JWTToken!
   getSearchedUsers(data: SearchUserInput!): [Users!]!
@@ -30,6 +34,7 @@ input SearchUserInput {
 
 type Mutation {
   signup(data: signupInput!): JWTToken!
+  createUserConnection(data: CreateConnectionInput!): CreateConnectionOutput!
 }
 
 input signupInput {
@@ -37,4 +42,9 @@ input signupInput {
   name: String!
   password: String!
   confirmPassword: String!
+}
+
+input CreateConnectionInput {
+  user1_id: Int!
+  user2_id: Int!
 }
