@@ -14,6 +14,23 @@ export class MessagesModel {
           content: message,
         },
       });
+      return messageSent;
     } catch (err) {}
+  }
+
+  async getAllMessages(connection_id: number) {
+    try {
+      const messages = await this.prismaService.messages.findMany({
+        where: {
+          connection_id,
+        },
+        select: {
+          content: true,
+          sender_id: true,
+          sent_time: true,
+        },
+      });
+      return messages;
+    } catch (e) {}
   }
 }

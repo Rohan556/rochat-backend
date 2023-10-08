@@ -32,12 +32,10 @@ export class AuthService {
       const hashedPassword = await this.authModel.getUserPassword(
         data.username,
       );
-      console.log({ password, hashedPassword });
 
       if (!hashedPassword)
         throw new UnauthorizedException('Not authorized user');
       const isValidUser = await bcrypt.compareSync(password, hashedPassword);
-      console.log({ isValidUser });
 
       if (!isValidUser) throw new UnauthorizedException('Not authorized user');
       return await this.generateJWTToken({ username: data.username });
@@ -52,7 +50,6 @@ export class AuthService {
     };
 
     const token: string = await jwt.sign(payload, 'rochat', options);
-    console.log({ token });
 
     return {
       refreshToken: token,

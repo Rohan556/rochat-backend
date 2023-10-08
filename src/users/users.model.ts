@@ -34,4 +34,15 @@ export class UsersModel {
       return (users as Users[]) || [];
     } catch (err) {}
   }
+
+  async getUserFromUserId(userId: number) {
+    try {
+      const userDetails = await this.prismaService.users.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+      return userDetails;
+    } catch (e) {}
+  }
 }

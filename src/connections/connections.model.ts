@@ -16,4 +16,15 @@ export class ConnectionsModel {
       return connection;
     } catch (err) {}
   }
+
+  async getUsersConnection(connection_id: number) {
+    try {
+      const connectedUsers = await this.prismaService.connections.findUnique({
+        where: {
+          connection_id,
+        },
+      });
+      return connectedUsers;
+    } catch (e) {}
+  }
 }

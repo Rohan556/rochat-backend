@@ -18,9 +18,31 @@ type CreateConnectionOutput {
   status: Boolean!
 }
 
+type SendMessageOutput {
+  status: Boolean!
+}
+
+type GetMessageFormat {
+  sender_id: Int!
+  content: String!
+  sent_time: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type GetMessagesOutput {
+  user1Details: Users!
+  user2Details: Users!
+  messages: [GetMessageFormat!]!
+}
+
 type Query {
   login(data: LoginInput!): JWTToken!
   getSearchedUsers(data: SearchUserInput!): [Users!]!
+  getMessages(data: GetMessagesInput!): GetMessagesOutput!
 }
 
 input LoginInput {
@@ -32,9 +54,14 @@ input SearchUserInput {
   searchString: String!
 }
 
+input GetMessagesInput {
+  connection_id: Int!
+}
+
 type Mutation {
   signup(data: signupInput!): JWTToken!
   createUserConnection(data: CreateConnectionInput!): CreateConnectionOutput!
+  sendMessage(data: SendMessageInput!): SendMessageOutput!
 }
 
 input signupInput {
@@ -47,4 +74,10 @@ input signupInput {
 input CreateConnectionInput {
   user1_id: Int!
   user2_id: Int!
+}
+
+input SendMessageInput {
+  connection_id: Int!
+  sender_id: Int!
+  message: String!
 }
