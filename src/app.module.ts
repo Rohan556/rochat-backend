@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import config from './configs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { ConnectionsModule } from './connections/connections.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ConnectionsModule } from './connections/connections.module';
     AuthModule,
     UsersModule,
     ConnectionsModule,
+    MessagesModule,
   ],
   controllers: [],
   providers: [],

@@ -38,4 +38,5 @@ model Messages {
   sender_id          Int
   sender_id_relation Users       @relation(fields: [sender_id], references: [id])
   sent_time          DateTime    @default(now())
+  content            String
 }
