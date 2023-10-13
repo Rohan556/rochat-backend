@@ -22,6 +22,10 @@ type SendMessageOutput {
   status: Boolean!
 }
 
+type MessageContentOutput {
+  getRealtimeMessage: String
+}
+
 type GetMessageFormat {
   sender_id: Int!
   content: String!
@@ -80,4 +84,8 @@ input SendMessageInput {
   connection_id: Int!
   sender_id: Int!
   message: String!
+}
+
+type Subscription {
+  getRealtimeMessage: MessageContentOutput!
 }
