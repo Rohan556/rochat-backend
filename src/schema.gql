@@ -46,6 +46,7 @@ type GetMessagesOutput {
 type Query {
   login(data: LoginInput!): JWTToken!
   getSearchedUsers(data: SearchUserInput!): [Users!]!
+  getConnections(data: GetConnectionInput!): [Users!]!
   getMessages(data: GetMessagesInput!): GetMessagesOutput!
 }
 
@@ -56,6 +57,10 @@ input LoginInput {
 
 input SearchUserInput {
   searchString: String!
+}
+
+input GetConnectionInput {
+  userId: Int!
 }
 
 input GetMessagesInput {
