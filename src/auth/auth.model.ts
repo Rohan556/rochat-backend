@@ -22,7 +22,9 @@ export class AuthModel {
     }
   }
 
-  async getUserPassword(username: string): Promise<string> {
+  async getUserPassword(
+    username: string,
+  ): Promise<{ password: string; userId: number }> {
     try {
       const user = await this.prismaService.users.findUnique({
         where: {
@@ -30,7 +32,10 @@ export class AuthModel {
         },
       });
 
-      return user.password;
+      return {
+        password: user.password,
+        userId: user.id,
+      };
     } catch (err) {
       console.log({ err });
     }

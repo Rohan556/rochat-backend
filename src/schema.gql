@@ -7,6 +7,11 @@ type JWTToken {
   accessToken: String!
 }
 
+type LoginOutput {
+  userId: Int!
+  token: JWTToken!
+}
+
 type Users {
   id: Int!
   username: String!
@@ -14,9 +19,41 @@ type Users {
   status: String!
 }
 
+type CreateConnectionOutput {
+  status: Boolean!
+}
+
+type SendMessageOutput {
+  status: Boolean!
+}
+
+type MessageContentOutput {
+  getRealtimeMessage: String
+  sender_id: Int!
+}
+
+type GetMessageFormat {
+  sender_id: Int!
+  content: String!
+  sent_time: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type GetMessagesOutput {
+  user1Details: Users!
+  user2Details: Users!
+  messages: [GetMessageFormat!]!
+}
+
 type Query {
-  login(data: LoginInput!): JWTToken!
+  login(data: LoginInput!): LoginOutput!
   getSearchedUsers(data: SearchUserInput!): [Users!]!
+  getConnections(data: GetConnectionInput!): [Users!]!
+  getMessages(data: GetMessagesInput!): GetMessagesOutput!
 }
 
 input LoginInput {
@@ -28,8 +65,19 @@ input SearchUserInput {
   searchString: String!
 }
 
+input GetConnectionInput {
+  userId: Int!
+}
+
+input GetMessagesInput {
+  user1_id: Int!
+  user2_id: Int!
+}
+
 type Mutation {
-  signup(data: signupInput!): JWTToken!
+  signup(data: signupInput!): LoginOutput!
+  createUserConnection(data: CreateConnectionInput!): CreateConnectionOutput!
+  sendMessage(data: SendMessageInput!): SendMessageOutput!
 }
 
 input signupInput {
@@ -37,4 +85,20 @@ input signupInput {
   name: String!
   password: String!
   confirmPassword: String!
+}
+
+input CreateConnectionInput {
+  user1_id: Int!
+  user2_id: Int!
+}
+
+input SendMessageInput {
+  user1_id: Int!
+  user2_id: Int!
+  sender_id: Int!
+  message: String!
+}
+
+type Subscription {
+  getRealtimeMessage(data: CreateConnectionInput!): MessageContentOutput!
 }

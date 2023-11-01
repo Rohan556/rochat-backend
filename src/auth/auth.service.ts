@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -7,40 +9,62 @@ import { LoginInput, signupInput } from './inputs/auth.input';
 import * as bcrypt from 'bcrypt';
 import { AuthModel } from './auth.model';
 import * as jwt from 'jsonwebtoken';
-import { JWTToken } from './dto/token.dto';
+import { JWTToken, LoginOutput } from './dto/token.dto';
+import { Users } from 'src/users/dto/users.dto';
+import { ForbiddenError } from 'apollo-server-express';
 
 @Injectable()
 export class AuthService {
   constructor(private authModel: AuthModel) {}
 
-  async createUser(data: signupInput): Promise<JWTToken> {
+  async createUser(data: signupInput): Promise<LoginOutput> {
     if (data.password.length < 6 && data.password !== data.confirmPassword) {
       throw new BadRequestException('Passwords do not match!');
     }
 
-    await bcrypt.hash(data.password, 10).then((hashing: string) => {
+    let user = {} as Users;
+
+    await bcrypt.hash(data.password, 10).then(async (hashing: string) => {
       data.password = hashing || 'Tukshdkljash';
-      this.authModel.createUser(data);
+      user = await this.authModel.createUser(data);
     });
 
-    return await this.generateJWTToken({ username: data.username });
+    if (!user) {
+      throw new HttpException('Username already taken', HttpStatus.FORBIDDEN);
+    }
+
+    const token = await this.generateJWTToken({
+      username: data.username,
+    });
+
+    return {
+      userId: user?.id,
+      token,
+    };
   }
 
-  async loginUser(data: LoginInput): Promise<JWTToken> {
+  async loginUser(
+    data: LoginInput,
+  ): Promise<{ token: JWTToken; userId: number }> {
     try {
       const password = data.password;
       const hashedPassword = await this.authModel.getUserPassword(
         data.username,
       );
-      console.log({ password, hashedPassword });
 
       if (!hashedPassword)
         throw new UnauthorizedException('Not authorized user');
-      const isValidUser = await bcrypt.compareSync(password, hashedPassword);
-      console.log({ isValidUser });
+      const isValidUser = await bcrypt.compareSync(
+        password,
+        hashedPassword.password,
+      );
 
       if (!isValidUser) throw new UnauthorizedException('Not authorized user');
-      return await this.generateJWTToken({ username: data.username });
+      const token = await this.generateJWTToken({ username: data.username });
+      return {
+        token,
+        userId: hashedPassword.userId,
+      };
     } catch (err) {
       console.log({ err });
     }
@@ -52,7 +76,6 @@ export class AuthService {
     };
 
     const token: string = await jwt.sign(payload, 'rochat', options);
-    console.log({ token });
 
     return {
       refreshToken: token,
