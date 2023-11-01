@@ -1,12 +1,9 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsNotEmpty } from 'class-validator';
+import { CreateConnectionInput } from 'src/connections/input/connections.input';
 
 @InputType()
-export class SendMessageInput {
-  @Field(() => Int)
-  @IsNotEmpty()
-  connection_id: number;
-
+export class SendMessageInput extends CreateConnectionInput {
   @Field(() => Int)
   @IsNotEmpty()
   sender_id: number;
@@ -20,5 +17,9 @@ export class SendMessageInput {
 export class GetMessagesInput {
   @Field(() => Int)
   @IsNotEmpty()
-  connection_id: number;
+  user1_id: number;
+
+  @Field(() => Int)
+  @IsNotEmpty()
+  user2_id: number;
 }

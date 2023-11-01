@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/services/prisma.service';
-import { Users } from 'src/users/dto/users.dto';
 
 @Injectable()
 export class ConnectionsModel {
@@ -68,7 +67,6 @@ export class ConnectionsModel {
 
       return usersId;
     });
-
     return [...new Set(uniqueUsers)];
   }
 
@@ -86,5 +84,25 @@ export class ConnectionsModel {
     });
 
     return usersInfo;
+  }
+
+  async getUserConnectionId(user1: number, user2: number) {
+    const connectionInfo = await this.prismaService.connections.findFirst({
+      where: {
+        OR: [
+          {
+            user1_id: user1,
+            user2_id: user2,
+          },
+          {
+            user1_id: user2,
+            user2_id: user1,
+          },
+        ],
+      },
+    });
+    console.log({ connectionInfo });
+
+    return connectionInfo.connection_id;
   }
 }

@@ -11,6 +11,9 @@ export class SendMessageOutput {
 export class MessageContentOutput {
   @Field(() => String, { nullable: true })
   getRealtimeMessage: string;
+
+  @Field(() => Int)
+  sender_id: number;
 }
 
 @ObjectType()

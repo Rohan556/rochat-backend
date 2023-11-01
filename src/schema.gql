@@ -7,6 +7,11 @@ type JWTToken {
   accessToken: String!
 }
 
+type LoginOutput {
+  userId: Int!
+  token: JWTToken!
+}
+
 type Users {
   id: Int!
   username: String!
@@ -24,6 +29,7 @@ type SendMessageOutput {
 
 type MessageContentOutput {
   getRealtimeMessage: String
+  sender_id: Int!
 }
 
 type GetMessageFormat {
@@ -44,7 +50,7 @@ type GetMessagesOutput {
 }
 
 type Query {
-  login(data: LoginInput!): JWTToken!
+  login(data: LoginInput!): LoginOutput!
   getSearchedUsers(data: SearchUserInput!): [Users!]!
   getConnections(data: GetConnectionInput!): [Users!]!
   getMessages(data: GetMessagesInput!): GetMessagesOutput!
@@ -64,11 +70,12 @@ input GetConnectionInput {
 }
 
 input GetMessagesInput {
-  connection_id: Int!
+  user1_id: Int!
+  user2_id: Int!
 }
 
 type Mutation {
-  signup(data: signupInput!): JWTToken!
+  signup(data: signupInput!): LoginOutput!
   createUserConnection(data: CreateConnectionInput!): CreateConnectionOutput!
   sendMessage(data: SendMessageInput!): SendMessageOutput!
 }
@@ -86,11 +93,12 @@ input CreateConnectionInput {
 }
 
 input SendMessageInput {
-  connection_id: Int!
+  user1_id: Int!
+  user2_id: Int!
   sender_id: Int!
   message: String!
 }
 
 type Subscription {
-  getRealtimeMessage: MessageContentOutput!
+  getRealtimeMessage(data: CreateConnectionInput!): MessageContentOutput!
 }
