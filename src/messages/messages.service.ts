@@ -12,7 +12,7 @@ export class MessagesService {
     private usersModel: UsersModel,
   ) {}
 
-  async sendMessage(connection_id, data: SendMessageInput) {
+  async sendMessage(connection_id: number, data: SendMessageInput) {
     try {
       const sentMessage = await this.messagesModel.sendMessage(
         connection_id,
@@ -27,15 +27,15 @@ export class MessagesService {
     const getConnectedUsers =
       await this.connectionsModel.getUsersConnection(connection_id);
 
-    const user1Details = await this.usersModel.getUserFromUserId(
-      getConnectedUsers.user1_id,
-    );
-
+    const [user1Details, user2Details] = await Promise.all([
+      await this.usersModel.getUserFromUserId(
+        getConnectedUsers.user1_id,
+      ),
+      await this.usersModel.getUserFromUserId(
+        getConnectedUsers.user2_id,
+      )
+    ]);
     delete user1Details.password;
-    const user2Details = await this.usersModel.getUserFromUserId(
-      getConnectedUsers.user2_id,
-    );
-
     delete user2Details.password;
 
     const messages = await this.messagesModel.getAllMessages(connection_id);
